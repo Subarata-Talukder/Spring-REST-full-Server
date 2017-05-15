@@ -1,6 +1,12 @@
 package com.subarata.springbootandrest.developer;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.subarata.springbootandrest.model.Developer;
@@ -8,16 +14,36 @@ import com.subarata.springbootandrest.model.Developer;
 @RestController
 public class DeveloperController {
 
+	@Autowired
+	private DeveloperSevice developerService;
+
+	@RequestMapping("/developers")
+	public List<Developer> developersInfo() {
+
+		return developerService.getDevelopers();
+	}
+
 	@RequestMapping("/developer")
-	public Developer developerInfo(){	
-		Developer developer = new Developer();
-		developer.setName("Subarata Chandra Talukder");
-		developer.setEducation("M.Sc. in Computer Science & Engineering");
-		developer.setDesignation("Software Engineer");
-		developer.setWorkingFields("Android, iOS, Sencha Extjs, Java Spring, PHP Codeigniter");
-		developer.setMessage("Hi and hello every one this my spring boot application. You may "
-				+ "get help from basic idea of the spring boot development");
-		
-		return developer;
+	public Developer developerInfo() {
+
+		return developerService.getLeadDeveloper();
+	}
+
+	@RequestMapping("/developer/{developerId}")
+	public Developer getDeveloperById(@PathVariable("developerId") Integer id) {
+
+		return developerService.getDeveloperById(id);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/developer")
+	public String addDeveloer(@RequestBody Developer developer) {
+
+		return developerService.addDeveloper(developer);
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, value = "/developer/{updateId}")
+	public String updateDeveloper(@RequestBody Developer developer, @PathVariable("updateId") Integer id) {
+
+		return developerService.updateDeveloper(developer, id);
 	}
 }
